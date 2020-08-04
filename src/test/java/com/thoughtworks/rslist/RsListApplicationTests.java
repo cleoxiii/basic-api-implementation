@@ -30,4 +30,18 @@ class RsListApplicationTests {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void should_get_rs_event_from_required_scope() throws Exception {
+        mockMvc.perform(get("/rs/list?start=1&end=2"))
+                .andExpect(content().string("[第一条事件, 第二条事件]"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_get_rs_event_from_required_scope_continued() throws Exception {
+        mockMvc.perform(get("/rs/list?start=1&end=3"))
+                .andExpect(content().string("[第一条事件, 第二条事件, 第三条事件]"))
+                .andExpect(status().isOk());
+    }
+
 }

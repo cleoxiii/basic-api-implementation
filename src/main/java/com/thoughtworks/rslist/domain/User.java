@@ -1,10 +1,21 @@
 package com.thoughtworks.rslist.domain;
 
+import javax.validation.constraints.*;
+
 public class User {
+    @NotNull
+    @Size(max = 8)
     private String userName;
+    @NotNull
     private String gender;
+    @NotNull
+    @Min(18)
+    @Max(100)
     private int age;
+    @Email
     private String email;
+    @NotNull
+    @Pattern(regexp = "1\\d{10}")
     private String phone;
 
     public User(String userName, String gender, int age, String email, String phone) {

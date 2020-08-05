@@ -28,17 +28,8 @@ class RsListApplicationTests {
     MockMvc mockMvc;
 
     @BeforeEach
-    void setup() {
-        RsController.rsEventList = new ArrayList<>();
-        UserController.userList = new ArrayList<>();
-
-        User user = new User("cleo", "female", 22, "a@b.com", "12345678900");
-
-        UserController.userList.add(user);
-
-        RsController.rsEventList.add(new RsEvent("第一条事件", "无标签", user));
-        RsController.rsEventList.add(new RsEvent("第二条事件", "无标签", user));
-        RsController.rsEventList.add(new RsEvent("第三条事件", "无标签", user));
+    void should_init_rsEventList() {
+        RsController.initRsEventList();
     }
 
     @Test

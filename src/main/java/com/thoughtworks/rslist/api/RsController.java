@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +10,16 @@ import java.util.List;
 
 @RestController
 public class RsController {
-  public static List<RsEvent> rsEventList;
+    public static List<RsEvent> rsEventList;
+
+    public static List<RsEvent> initRsEventList() {
+        rsEventList = new ArrayList<>();
+        User admin = new User("admin", "female", 22, "a@b.com", "12345678900");
+        rsEventList.add(new RsEvent("第一条事件", "无标签", admin));
+        rsEventList.add(new RsEvent("第二条事件", "无标签", admin));
+        rsEventList.add(new RsEvent("第三条事件", "无标签", admin));
+        return rsEventList;
+    }
 
   @GetMapping("/rs/{index}")
   public RsEvent getRsEvent(@PathVariable int index) {

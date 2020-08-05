@@ -9,15 +9,7 @@ import java.util.List;
 
 @RestController
 public class RsController {
-  private static List<RsEvent> rsEventList;
-
-  public static List<RsEvent> initRsEventList() {
-      rsEventList = new ArrayList<>();
-      rsEventList.add(new RsEvent("第一条事件", "无标签"));
-      rsEventList.add(new RsEvent("第二条事件", "无标签"));
-      rsEventList.add(new RsEvent("第三条事件", "无标签"));
-      return rsEventList;
-  }
+  public static List<RsEvent> rsEventList;
 
   @GetMapping("/rs/{index}")
   public RsEvent getRsEvent(@PathVariable int index) {

@@ -1,6 +1,9 @@
 package com.thoughtworks.rslist;
 
 import com.thoughtworks.rslist.api.RsController;
+import com.thoughtworks.rslist.api.UserController;
+import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import java.util.ArrayList;
+
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -24,8 +28,17 @@ class RsListApplicationTests {
     MockMvc mockMvc;
 
     @BeforeEach
-    void should_init_rsEventList() {
-        RsController.initRsEventList();
+    void setup() {
+        RsController.rsEventList = new ArrayList<>();
+        UserController.userList = new ArrayList<>();
+
+        User user = new User("cleo", "female", 22, "a@b.com", "12345678900");
+
+        UserController.userList.add(user);
+
+        RsController.rsEventList.add(new RsEvent("第一条事件", "无标签", user));
+        RsController.rsEventList.add(new RsEvent("第二条事件", "无标签", user));
+        RsController.rsEventList.add(new RsEvent("第三条事件", "无标签", user));
     }
 
     @Test

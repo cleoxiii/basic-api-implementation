@@ -121,4 +121,37 @@ class RsListApplicationTests {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void should_update_rs_event_when_event_name_changed() throws Exception {
+        String jsonString = "{\"eventName\":\"热搜名已更改\"}";
+
+        mockMvc.perform(put("/rs/update2").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("热搜名已更改")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_update_rs_event_when_keyword_changed() throws Exception {
+        String jsonString = "{\"keyWord\":\"热搜标签已更改\"}";
+
+        mockMvc.perform(put("/rs/update2").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("热搜标签已更改")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
 }

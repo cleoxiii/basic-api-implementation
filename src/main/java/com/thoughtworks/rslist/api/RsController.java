@@ -47,8 +47,11 @@ public class RsController {
       RsEvent current = rsEventList.get(index - 1);
       String newEventName = rsEvent.getEventName();
       String newKeyWord = rsEvent.getKeyWord();
-      if (!newEventName.isEmpty() && !newKeyWord.isEmpty()) {
+      if (newEventName != null && !newEventName.isEmpty()) {
           current.setEventName(newEventName);
+      }
+
+      if (newKeyWord != null && !newKeyWord.isEmpty()) {
           current.setKeyWord(newKeyWord);
       }
   }

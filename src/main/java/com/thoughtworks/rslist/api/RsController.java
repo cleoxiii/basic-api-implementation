@@ -41,4 +41,15 @@ public class RsController {
   public void deleteRsEvent(@PathVariable int index) {
       rsEventList.remove(index - 1);
   }
+
+  @PutMapping("rs/update{index}")
+  public void updateRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
+      RsEvent current = rsEventList.get(index - 1);
+      String newEventName = rsEvent.getEventName();
+      String newKeyWord = rsEvent.getKeyWord();
+      if (!newEventName.isEmpty() && !newKeyWord.isEmpty()) {
+          current.setEventName(newEventName);
+          current.setKeyWord(newKeyWord);
+      }
+  }
 }

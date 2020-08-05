@@ -1,5 +1,7 @@
 package com.thoughtworks.rslist;
 
+import com.thoughtworks.rslist.api.RsController;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +19,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class RsListApplicationTests {
     @Autowired
     MockMvc mockMvc;
+
+    @BeforeEach
+    void should_init_rsEventList() {
+        RsController.initRsEventList();
+    }
 
     @Test
     void should_get_rs_event_list() throws Exception {

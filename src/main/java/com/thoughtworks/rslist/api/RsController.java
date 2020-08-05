@@ -5,6 +5,7 @@ import com.thoughtworks.rslist.domain.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,41 +22,41 @@ public class RsController {
         return rsEventList;
     }
 
-  @GetMapping("/rs/{index}")
-  public RsEvent getRsEvent(@PathVariable int index) {
-    return rsEventList.get(index - 1);
-  }
-
-  @GetMapping("/rs/list")
-  public List<RsEvent> getRsEventFromScope(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
-    if (start != null || end != null) {
-      return rsEventList.subList(start - 1, end);
+    @GetMapping("/rs/{index}")
+    public RsEvent getRsEvent(@PathVariable int index) {
+        return rsEventList.get(index - 1);
     }
 
-    return rsEventList;
-  }
+    @GetMapping("/rs/list")
+    public List<RsEvent> getRsEventFromScope(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
+        if (start != null || end != null) {
+            return rsEventList.subList(start - 1, end);
+        }
 
-  @PostMapping("/rs/event")
-  public void addRsEvent(@RequestBody RsEvent rsEvent) {
-      rsEventList.add(rsEvent);
-  }
+        return rsEventList;
+    }
 
-  @DeleteMapping("/rs/delete{index}")
-  public void deleteRsEvent(@PathVariable int index) {
-      rsEventList.remove(index - 1);
-  }
+    @PostMapping("/rs/event")
+    public void addRsEvent(@RequestBody RsEvent rsEvent) {
+        rsEventList.add(rsEvent);
+    }
 
-  @PutMapping("rs/update{index}")
-  public void updateRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
-      RsEvent current = rsEventList.get(index - 1);
-      String newEventName = rsEvent.getEventName();
-      String newKeyWord = rsEvent.getKeyWord();
-      if (newEventName != null && !newEventName.isEmpty()) {
-          current.setEventName(newEventName);
-      }
+    @DeleteMapping("/rs/delete{index}")
+    public void deleteRsEvent(@PathVariable int index) {
+        rsEventList.remove(index - 1);
+    }
 
-      if (newKeyWord != null && !newKeyWord.isEmpty()) {
-          current.setKeyWord(newKeyWord);
-      }
-  }
+    @PutMapping("rs/update{index}")
+    public void updateRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
+        RsEvent current = rsEventList.get(index - 1);
+        String newEventName = rsEvent.getEventName();
+        String newKeyWord = rsEvent.getKeyWord();
+        if (newEventName != null && !newEventName.isEmpty()) {
+            current.setEventName(newEventName);
+        }
+
+        if (newKeyWord != null && !newKeyWord.isEmpty()) {
+            current.setKeyWord(newKeyWord);
+        }
+    }
 }

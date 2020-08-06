@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,10 +24,10 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public void registerUser(@RequestBody @Valid User user) {
-        userList.add(user);
+    public ResponseEntity registerUser(@RequestBody @Valid User user) {
+        return ResponseEntity.ok(userList.add(user));
     }
 
     @GetMapping("/user/list")
-    public List<User> getUserList() { return userList; }
+    public ResponseEntity getUserList() { return ResponseEntity.ok(userList); }
 }

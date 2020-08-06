@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,25 +25,26 @@ public class RsController {
     }
 
     @GetMapping("/rs/{index}")
-    public RsEvent getRsEvent(@PathVariable int index) {
-        return rsEventList.get(index - 1);
+    public ResponseEntity getRsEvent(@PathVariable int index) {
+        return ResponseEntity.ok(rsEventList.get(index - 1));
     }
 
     @GetMapping("/rs/list")
-    public List<RsEvent> getRsEventFromScope(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
+    public ResponseEntity getRsEventFromScope(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
         if (start != null || end != null) {
-            return rsEventList.subList(start - 1, end);
+            return ResponseEntity.ok(rsEventList.subList(start - 1, end));
         }
 
-        return rsEventList;
+        return ResponseEntity.ok(rsEventList);
     }
 
     @PostMapping("/rs/event")
-    public void addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
+    public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
         rsEventList.add(rsEvent);
         if (!isUserExist(rsEvent.getUser())) {
             UserController.userList.add(rsEvent.getUser());
         }
+        return ResponseEntity.ok(null);
     }
 
     private boolean isUserExist(User user) {
@@ -55,12 +57,13 @@ public class RsController {
     }
 
     @DeleteMapping("/rs/delete{index}")
-    public void deleteRsEvent(@PathVariable int index) {
+    public ResponseEntity deleteRsEvent(@PathVariable int index) {
         rsEventList.remove(index - 1);
+        return ResponseEntity.ok(null);
     }
 
     @PutMapping("rs/update{index}")
-    public void updateRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
+    public ResponseEntity updateRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
         RsEvent current = rsEventList.get(index - 1);
         String newEventName = rsEvent.getEventName();
         String newKeyWord = rsEvent.getKeyWord();
@@ -71,5 +74,6 @@ public class RsController {
         if (newKeyWord != null && !newKeyWord.isEmpty()) {
             current.setKeyWord(newKeyWord);
         }
+        return ResponseEntity.ok(null);
     }
 }

@@ -91,11 +91,11 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/user/list"))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].userName", is("admin")))
-                .andExpect(jsonPath("$[0].gender", is("female")))
-                .andExpect(jsonPath("$[0].age", is(22)))
-                .andExpect(jsonPath("$[0].email", is("a@b.com")))
-                .andExpect(jsonPath("$[0].phone", is("12345678900")))
+                .andExpect(jsonPath("$[0].user_name", is("admin")))
+                .andExpect(jsonPath("$[0].user_gender", is("female")))
+                .andExpect(jsonPath("$[0].user_age", is(22)))
+                .andExpect(jsonPath("$[0].user_email", is("a@b.com")))
+                .andExpect(jsonPath("$[0].user_phone", is("12345678900")))
                 .andExpect(status().isOk());
     }
 
@@ -120,11 +120,11 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/user/list"))
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[1].userName", is("cleo")))
-                .andExpect(jsonPath("$[1].gender", is("female")))
-                .andExpect(jsonPath("$[1].age", is(22)))
-                .andExpect(jsonPath("$[1].email", is("a@b.com")))
-                .andExpect(jsonPath("$[1].phone", is("12345678900")))
+                .andExpect(jsonPath("$[1].user_name", is("cleo")))
+                .andExpect(jsonPath("$[1].user_gender", is("female")))
+                .andExpect(jsonPath("$[1].user_age", is(22)))
+                .andExpect(jsonPath("$[1].user_email", is("a@b.com")))
+                .andExpect(jsonPath("$[1].user_phone", is("12345678900")))
                 .andExpect(status().isOk());
     }
 }

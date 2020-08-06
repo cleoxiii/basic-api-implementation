@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class RsController {
     }
 
     @PostMapping("/rs/event")
-    public void addRsEvent(@RequestBody RsEvent rsEvent) {
+    public void addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
         rsEventList.add(rsEvent);
         if (!isUserExist(rsEvent.getUser())) {
             UserController.userList.add(rsEvent.getUser());

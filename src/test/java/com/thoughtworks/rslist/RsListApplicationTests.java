@@ -99,6 +99,132 @@ class RsListApplicationTests {
     }
 
     @Test
+    void should_not_add_new_rs_event_when_event_name_is_null() throws Exception {
+        String jsonString = "{\"keyWord\":\"经济\"," +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_keyword_is_null() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\"," +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_user_name_is_not_satisfied() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+                "\"user\": {\"userName\":\"abcdefghijklmn\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_user_gender_is_not_satisfied() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"\",\"age\":17,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_user_age_is_not_satisfied() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":17,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_user_email_is_not_satisfied() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_user_phone_is_not_satisfied() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"123456789\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void should_delete_rs_event_particularly() throws Exception {
         String jsonString = "{\"eventName\":\"第三条事件\",\"keyWord\":\"无标签\"}";
 

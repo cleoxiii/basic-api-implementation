@@ -291,4 +291,11 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[2].keyWord", is("无标签")))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void should_throw_exception_when_index_out_of_scope() throws Exception {
+        mockMvc.perform(get("/rs/0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("invalid index")));
+    }
 }

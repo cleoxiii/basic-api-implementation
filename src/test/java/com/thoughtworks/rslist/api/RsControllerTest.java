@@ -138,7 +138,7 @@ class RsControllerTest {
 
     @Test
     void should_not_add_new_rs_event_when_user_name_is_not_satisfied() throws Exception {
-        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"," +
                 "\"user\": {\"userName\":\"abcdefghijklmn\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
@@ -156,8 +156,8 @@ class RsControllerTest {
 
     @Test
     void should_not_add_new_rs_event_when_user_gender_is_not_satisfied() throws Exception {
-        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
-                "\"user\": {\"userName\":\"cleo\",\"gender\":\"\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"," +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":null,\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -174,7 +174,7 @@ class RsControllerTest {
 
     @Test
     void should_not_add_new_rs_event_when_user_age_is_not_satisfied() throws Exception {
-        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"," +
                 "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":17,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
@@ -192,8 +192,8 @@ class RsControllerTest {
 
     @Test
     void should_not_add_new_rs_event_when_user_email_is_not_satisfied() throws Exception {
-        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
-                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b\",\"phone\":\"12345678900\"}}";
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"," +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"abc\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -210,7 +210,7 @@ class RsControllerTest {
 
     @Test
     void should_not_add_new_rs_event_when_user_phone_is_not_satisfied() throws Exception {
-        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"," +
                 "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"123456789\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
@@ -297,5 +297,15 @@ class RsControllerTest {
         mockMvc.perform(get("/rs/0"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("invalid index")));
+    }
+
+    @Test
+    void should_throw_exception_when_rs_event_not_satisfy_validation() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"," +
+                "\"user\": {\"userName\":\"abcdefghijklmn\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("invalid param")));;
     }
 }

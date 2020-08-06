@@ -5,6 +5,7 @@ import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.exception.Error;
 import com.thoughtworks.rslist.exception.RsEventNotValidException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -81,13 +82,5 @@ public class RsController {
             current.setKeyWord(newKeyWord);
         }
         return ResponseEntity.ok(null);
-    }
-
-    @ExceptionHandler(RsEventNotValidException.class)
-    public ResponseEntity RsEventExceptionHandler(RsEventNotValidException e) {
-        Error error = new Error();
-        error.setError(e.getMessage());
-
-        return ResponseEntity.badRequest().body(error);
     }
 }

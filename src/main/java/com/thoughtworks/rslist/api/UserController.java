@@ -25,7 +25,8 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity registerUser(@RequestBody @Valid User user) {
-        return ResponseEntity.ok(userList.add(user));
+        userList.add(user);
+        return ResponseEntity.created(null).build();
     }
 
     @GetMapping("/user/list")

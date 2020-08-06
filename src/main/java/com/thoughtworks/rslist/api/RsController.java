@@ -44,7 +44,7 @@ public class RsController {
         if (!isUserExist(rsEvent.getUser())) {
             UserController.userList.add(rsEvent.getUser());
         }
-        return ResponseEntity.ok(null);
+        return ResponseEntity.created(null).build();
     }
 
     private boolean isUserExist(User user) {

@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ public class UserControllerTest {
         String jsonString = objectMapper.writeValueAsString(user);
 
         mockMvc.perform(post("/user").content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -75,7 +76,7 @@ public class UserControllerTest {
                 "\"user\": {\"userName\":\"admin\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$", hasSize(4)))
                 .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
@@ -103,7 +104,7 @@ public class UserControllerTest {
                 "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$", hasSize(4)))
                 .andExpect(jsonPath("$[0].eventName", is("第一条事件")))

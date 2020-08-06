@@ -1,5 +1,8 @@
 package com.thoughtworks.rslist.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +81,7 @@ class RsControllerTest {
                 "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$", hasSize(4)))
                 .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
@@ -149,7 +152,7 @@ class RsControllerTest {
     @Test
     void should_not_add_new_rs_event_when_user_gender_is_not_satisfied() throws Exception {
         String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
-                "\"user\": {\"userName\":\"cleo\",\"gender\":\"\",\"age\":17,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

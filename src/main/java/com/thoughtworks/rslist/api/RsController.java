@@ -41,10 +41,11 @@ public class RsController {
     @PostMapping("/rs/event")
     public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
         rsEventList.add(rsEvent);
+        Integer index = rsEventList.size();
         if (!isUserExist(rsEvent.getUser())) {
             UserController.userList.add(rsEvent.getUser());
         }
-        return ResponseEntity.created(null).build();
+        return ResponseEntity.created(null).header("添加的热搜事件在列表中的index是", index.toString()).build();
     }
 
     private boolean isUserExist(User user) {

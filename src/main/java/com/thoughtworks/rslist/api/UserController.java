@@ -26,7 +26,8 @@ public class UserController {
     @PostMapping("/user")
     public ResponseEntity registerUser(@RequestBody @Valid User user) {
         userList.add(user);
-        return ResponseEntity.created(null).build();
+        Integer index = userList.size();
+        return ResponseEntity.created(null).header("添加的用户在列表中的index是", index.toString()).build();
     }
 
     @GetMapping("/user/list")

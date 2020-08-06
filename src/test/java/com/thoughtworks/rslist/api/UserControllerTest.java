@@ -15,8 +15,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,6 +36,7 @@ public class UserControllerTest {
         String jsonString = objectMapper.writeValueAsString(user);
 
         mockMvc.perform(post("/user").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(header().string("添加的用户在列表中的index是", "2"))
                 .andExpect(status().isCreated());
     }
 
@@ -76,6 +76,7 @@ public class UserControllerTest {
                 "\"user\": {\"userName\":\"admin\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(header().string("添加的热搜事件在列表中的index是", "4"))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$", hasSize(4)))
@@ -104,6 +105,7 @@ public class UserControllerTest {
                 "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(header().string("添加的热搜事件在列表中的index是", "4"))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$", hasSize(4)))

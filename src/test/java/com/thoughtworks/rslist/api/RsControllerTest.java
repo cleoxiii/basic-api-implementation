@@ -81,6 +81,7 @@ class RsControllerTest {
                 "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(header().string("添加的热搜事件在列表中的index是", "4"))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$", hasSize(4)))

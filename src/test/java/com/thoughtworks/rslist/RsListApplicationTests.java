@@ -1,6 +1,9 @@
 package com.thoughtworks.rslist;
 
 import com.thoughtworks.rslist.api.RsController;
+import com.thoughtworks.rslist.api.UserController;
+import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import java.util.ArrayList;
+
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -26,6 +30,7 @@ class RsListApplicationTests {
     @BeforeEach
     void should_init_rsEventList() {
         RsController.initRsEventList();
+        UserController.initUserList();
     }
 
     @Test
@@ -75,7 +80,8 @@ class RsListApplicationTests {
 
     @Test
     void should_add_new_rs_event() throws Exception {
-        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"}";
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"," +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -89,6 +95,132 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$[2].keyWord", is("无标签")))
                 .andExpect(jsonPath("$[3].eventName", is("猪肉涨价啦")))
                 .andExpect(jsonPath("$[3].keyWord", is("经济")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_event_name_is_null() throws Exception {
+        String jsonString = "{\"keyWord\":\"经济\"," +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_keyword_is_null() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\"," +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_user_name_is_not_satisfied() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+                "\"user\": {\"userName\":\"abcdefghijklmn\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_user_gender_is_not_satisfied() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"\",\"age\":17,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_user_age_is_not_satisfied() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":17,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_user_email_is_not_satisfied() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_add_new_rs_event_when_user_phone_is_not_satisfied() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"" +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"123456789\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
                 .andExpect(status().isOk());
     }
 

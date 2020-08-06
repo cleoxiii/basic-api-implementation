@@ -72,8 +72,8 @@ public class UserControllerTest {
 
     @Test
     public void should_add_rs_event_when_user_already_exist() throws Exception {
-        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"}," +
-                "\"user\":{\"userName\":\"admin\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}";
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"," +
+                "\"user\": {\"userName\":\"admin\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -95,6 +95,34 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[0].age", is(22)))
                 .andExpect(jsonPath("$[0].email", is("a@b.com")))
                 .andExpect(jsonPath("$[0].phone", is("12345678900")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void should_add_user_when_user_not_exist() throws Exception {
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"," +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(4)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[3].eventName", is("猪肉涨价啦")))
+                .andExpect(jsonPath("$[3].keyWord", is("经济")))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/user/list"))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[1].userName", is("cleo")))
+                .andExpect(jsonPath("$[1].gender", is("female")))
+                .andExpect(jsonPath("$[1].age", is(22)))
+                .andExpect(jsonPath("$[1].email", is("a@b.com")))
+                .andExpect(jsonPath("$[1].phone", is("12345678900")))
                 .andExpect(status().isOk());
     }
 }

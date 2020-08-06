@@ -30,6 +30,7 @@ class RsListApplicationTests {
     @BeforeEach
     void should_init_rsEventList() {
         RsController.initRsEventList();
+        UserController.initUserList();
     }
 
     @Test
@@ -79,7 +80,8 @@ class RsListApplicationTests {
 
     @Test
     void should_add_new_rs_event() throws Exception {
-        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"}";
+        String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"," +
+                "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

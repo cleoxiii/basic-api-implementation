@@ -39,6 +39,18 @@ public class RsController {
     @PostMapping("/rs/event")
     public void addRsEvent(@RequestBody RsEvent rsEvent) {
         rsEventList.add(rsEvent);
+        if (!isUserExist(rsEvent.getUser())) {
+            UserController.userList.add(rsEvent.getUser());
+        }
+    }
+
+    private boolean isUserExist(User user) {
+        for (User existedUser : UserController.userList) {
+            if (user.getUserName().equals(existedUser.getUserName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @DeleteMapping("/rs/delete{index}")

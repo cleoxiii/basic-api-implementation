@@ -1,5 +1,7 @@
 package com.thoughtworks.rslist.component;
 
+import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.exception.Error;
 import com.thoughtworks.rslist.exception.RsEventNotValidException;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,16 @@ public class RsEventExceptionHandler {
     @ExceptionHandler({RsEventNotValidException.class, MethodArgumentNotValidException.class,
             IndexOutOfBoundsException.class, IllegalArgumentException.class})
     public ResponseEntity RsEventExceptionHandler(Exception e) {
-        String errorMessage;
+        String errorMessage = "";
         if (e instanceof MethodArgumentNotValidException) {
-            errorMessage = "invalid param";
+             MethodArgumentNotValidException methodArgumentNotValidException= ((MethodArgumentNotValidException) e);
+            if (methodArgumentNotValidException.getBindingResult().getTarget() instanceof RsEvent) {
+                errorMessage = "invalid param";
+            }
+            if (methodArgumentNotValidException.getBindingResult().getTarget() instanceof User) {
+                errorMessage = "invalid user";
+            }
+
         } else if (e instanceof IndexOutOfBoundsException || e instanceof IllegalArgumentException) {
             errorMessage = "invalid request param";
         } else {

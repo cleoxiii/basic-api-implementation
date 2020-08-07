@@ -80,6 +80,21 @@ class RsControllerTest {
     }
 
     @Test
+    void should_throw_exception_when_get_rs_event_from_invalid_scope() throws Exception {
+        mockMvc.perform(get("/rs/list?start=0&end=5"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("invalid request param")));
+    }
+
+    @Test
+    void should_throw_exception_when_start_index_beyond_end_index() throws Exception {
+        mockMvc.perform(get("/rs/list?start=5&end=1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("invalid request param")));
+    }
+
+
+    @Test
     void should_add_new_rs_event() throws Exception {
         String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"," +
                 "\"user\": {\"userName\":\"cleo\",\"gender\":\"female\",\"age\":22,\"email\":\"a@b.com\",\"phone\":\"12345678900\"}}";
